@@ -1,0 +1,35 @@
+class Perceptron():
+    def __init__(self, input_num, activator):
+        self.activator=activator
+        self.input_num=input_num
+        self.weights=(0.0,for _ in range(input_num))
+        self.bias=0.0
+
+    def __str__(self):
+        return 'weights\t:%s\nbias\t:%f\n' % (self.weights, self.bias)
+
+    #用感知器进行预测:w*x+bias
+    def predict(self, input_vec):
+        #将x值与对应的权重打包在一起，再计算乘积
+        #利用map在zip中执行乘积算法
+        #利用reduce求和
+        weightedX=map((lambda x,w:x*w), zip(input_vec,self.weights))
+        sumXW=reduce((lambda x,y:x+y), weightedX,0.0)
+        return (sumXW+self.bias)
+
+    def train(self, input_vecs, labels, iteration, rate):
+        for i in range(iteration):
+            self._one_iteration(input_vecs, labels, rate)
+    #一次迭代
+    def _one_iteration(self, input_vecs, labels, rate):
+        samples = zip(input_vecs, labels)
+        # 对每个样本，按照感知器规则更新权重
+        for (input_vecs, labels) in samples:
+            output = self.predict(input_vecs)
+            self._update_weights(input_vecs, output, labels, rate)
+
+    def _update_weights(self, input_vec, output, label, rate):
+        delta = label - output
+        self.weights =map((lambda x,w:w+rate*delta*x),zip(input_vec, self.weights))
+        self.bias=self.bias+rate*delta
+
