@@ -32,4 +32,3 @@ class Perceptron():
         delta = label - output
         self.weights =map((lambda x,w:w+rate*delta*x),zip(input_vec, self.weights))
         self.bias=self.bias+rate*delta
-
